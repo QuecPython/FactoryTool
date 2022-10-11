@@ -18,6 +18,7 @@ import threading
 import file_handler
 import serial_list
 import serial_handler
+from log_redirect import RedirectErr, RedirectStd
 from pubsub import pub
 from queue import Queue
 
@@ -29,7 +30,11 @@ class FactoryFrame(wx.Frame):
         kwargs["style"] = kwargs.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwargs)
         self.SetSize((876, 600))
-
+        # stdout log
+        # sys.stderr = RedirectErr(self, PROJECT_ABSOLUTE_PATH)
+        # sys.stdout = RedirectStd(self, PROJECT_ABSOLUTE_PATH)
+        # module log
+        self.logger = ModuleLog()
         # Menu Bar
         self.menuBar = wx.MenuBar()
         wxg_tmp_menu = wx.Menu()
@@ -598,7 +603,7 @@ class FactoryFrame(wx.Frame):
         test_result = ser.write_module(arg1["script"], self.__exec_py_cmd_list)  # 写入脚本开始测试
         ret_result = test_result.split(self.__exec_py_cmd_list[1])[1].split("\r\n")[1:-1]     # get recv list
         self.__py_exec_result[arg1["id"]] = test_result   # 设置测试结果
-        # 判断处理结果
+        self.logger.write_file(arg1["PortInfo"], test_result)
         # TODO excel写入不要列表形式
         if "False" not in ret_result:
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 1})
@@ -722,6 +727,30 @@ class MyApp(wx.App):
         self.SetTopWindow(self.factory_frame)
         self.factory_frame.Show()
         return True
+
+
+class ModuleLog(object):
+    """log output file"""
+    def __init__(self):
+        if not os.path.exists(PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\"):
+            os.makedirs(PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\")
+        for i in os.walk(PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\"):
+            self._log_file_list = i[2]
+        if len(self._log_file_list) >= 50:
+            os.remove(PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\" + self._log_file_list[0])
+        self._log_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".log"
+
+    def write_file(self, port, data):
+        try:
+            tmp_data = "[" + port + "]\n" + data + "\n"
+            with open(PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\" + self._log_name, "a+", encoding="utf-8")as f:
+                f.write(tmp_data)
+            return True
+        except:
+            info = sys.exc_info()
+            print("write file error.")
+            print(info[0], info[1])
+            return False
 
 
 if __name__ == "__main__":
