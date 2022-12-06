@@ -505,7 +505,7 @@ class FactoryFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_CANCEL:
             return
         self.text_ctrl_json.SetValue(dlg.GetPath())
-        # TODO 处理文件
+        # TODO ymodem处理文件
 
     def test_start(self, event):
         button_event_id = event.GetId() - 100  # button ID 100开始
