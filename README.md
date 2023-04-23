@@ -2,12 +2,10 @@
 
 ## 文档历史
 
-| 版本 | 日期       | 作者 | 变更描述 |
-| ---- | ---------- | ---- | -------- |
-| 1.0  | 2022-10-08 | 袁帅 | 初版     |
-|      |            |      |          |
-
-
+| 版本 | 日期       | 作者 | 变更描述     |
+| ---- | ---------- | ---- | ------------ |
+| 1.0  | 2022-10-08 | 袁帅 | 初版         |
+| 2.0  | 2023-04-23 | 袁帅 | 更新使用说明 |
 
 ## 简介
 
@@ -20,6 +18,12 @@ QuecPython产测工具是专用于QuecPython项目模块出厂测试的工具，
 适用模块：
 
 所有使用QuecPython开发的模块均可使用
+
+## 如何拉取仓库
+
+```shell
+git clone --recurse-submodules https://github.com/QuecPython/FactoryTool.git
+```
 
 ## 页面介绍
 
@@ -62,9 +66,14 @@ def det_signal():
 
 ![1665208145345](./media/1665208145345.png)
 
+## 测试原理
 
+产测工具利用python脚本的形式来测试QuecPython产品的业务功能，通过CDC口来执行测试脚本，测试脚本根据测试需求可以自行调整以达成完成生产测试的功能
 
-
+1. 通过QuecPython的API接口来获取模组参数和运行状态
+2. 通过访问正在运行的业务代码中的对象来获取业务运行情况
+3. 通过调用业务代码提供的接口才测试业务功能或者硬件功能
+4. 通过QuecPython API接口传输配置文件或者写入产品参数
 
 ## 测试步骤
 
@@ -82,26 +91,35 @@ def det_signal():
 
 ## 测试结果
 
-每一个模块的的测试结果会写入到excel中导出，可以通过菜单栏的 **配置** 中的 **测试结果文件 **菜单打开该excel文件，该文件会保存在工具同级目录下
+每一个模块的的测试结果会写入到excel中导出，可以通过菜单栏的 **配置** 中的 **测试结果文件 **菜单打开该excel文件
+
+每一次测试会在excel中生成一条测试记录（无论测试成功或者失败），多次测试会有多条记录，根据测试设备的IMEI区分
+
+该文件会保存在工具同级目录下，测试过程中自动追加
 
 同时测试结果会上传到云端生成报表以供云端查看整体测试结果（开发中）
-
-## 文件下载
-
-使用Ymodem协议下载文件到模块中（开发中）
 
 
 ## 环境配置
 
-安装依赖库
+**安装依赖库**
+
+```shell
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# 如果上面方式安装失败，可以使用单独安装的形式
+pip install wxpython -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install pypubsub -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
-pip install -r requirements.txt
-```
-运行代码
-```
+**运行代码**
+
+```shell
 python main.py
 ```
-编译成exe程序
-```
+**编译成可执行程序**
+
+```shell
+# 如果上面使用单独安装的形式，需要安装一下pyinstaller库
+pip install pyinstaller -i https://pypi.tuna.tsinghua.edu.cn/simple
+# 编译成exe程序，输出exe目录在./dist/下
 pyinstaller -F-w --win-private-assemblies --icon images/quectel.ico -w ./main.py
 ```
