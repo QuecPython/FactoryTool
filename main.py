@@ -11,6 +11,8 @@ import sys
 import os
 import time
 import wx
+import locale
+import gettext
 import asyncio
 import datetime
 import subprocess
@@ -41,83 +43,83 @@ class FactoryFrame(wx.Frame):
         # wxg_tmp_menu.Append(1001, u"Auto detect Port", "")
         # self.Bind(wx.EVT_MENU, self.__menu_handler, id=1001)
         # wxg_tmp_menu.AppendSeparator()
-        wxg_tmp_menu.Append(1002, u"Edit Py File", "")
+        wxg_tmp_menu.Append(1002, _(u"编辑Py文件"), "")
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=1002)
-        wxg_tmp_menu.Append(1003, u"Edit Excel File", "")
+        wxg_tmp_menu.Append(1003, _(u"编辑Excel文件"), "")
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=1003)
-        self.menuBar.Append(wxg_tmp_menu, u"Edit")
+        self.menuBar.Append(wxg_tmp_menu, _(u"编辑"))
         wxg_tmp_menu_1 = wx.Menu()
-        wxg_tmp_menu_1.Append(2001, u"Tool Log", "")
+        wxg_tmp_menu_1.Append(2001, _(u"工具日志"), "")
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=2001)
         wxg_tmp_menu_1.AppendSeparator()
-        wxg_tmp_menu_1.Append(2002, u"Module Log", "")
+        wxg_tmp_menu_1.Append(2002, _(u"工具日志"), "")
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=2002)
-        self.menuBar.Append(wxg_tmp_menu_1, u"Log")
+        self.menuBar.Append(wxg_tmp_menu_1, _(u"日志"))
         self.SetMenuBar(self.menuBar)
         # Menu Bar end
         self.statusBar = self.CreateStatusBar(3)
         self.main_panel = wx.Panel(self, wx.ID_ANY)
-        self.load_py = wx.Button(self.main_panel, wx.ID_ANY, "Load")
+        self.load_py = wx.Button(self.main_panel, wx.ID_ANY, _("选择"))
         self.text_ctrl_py = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.load_json = wx.Button(self.main_panel, wx.ID_ANY, "Load")
+        self.load_json = wx.Button(self.main_panel, wx.ID_ANY, _("选择"))
         self.text_ctrl_json = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_3 = wx.Button(self.main_panel, wx.ID_ANY, "Start All", style=wx.BU_TOP)
-        self.button_4 = wx.Button(self.main_panel, 100, "Start")
+        self.button_3 = wx.Button(self.main_panel, wx.ID_ANY, _("全部开始"), style=wx.BU_TOP)
+        self.button_4 = wx.Button(self.main_panel, 100, _("开始"))
         self.text_ctrl_7 = wx.TextCtrl(self.main_panel, 10, "", style=wx.TE_READONLY)
         self.text_ctrl_8 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_9 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_10 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_11 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_2 = wx.Button(self.main_panel, 200, "Log")
-        self.button_5 = wx.Button(self.main_panel, 101, "Start")
+        self.button_2 = wx.Button(self.main_panel, 200, _("日志"))
+        self.button_5 = wx.Button(self.main_panel, 101, _("开始"))
         self.text_ctrl_13 = wx.TextCtrl(self.main_panel, 11, "", style=wx.TE_READONLY)
         self.text_ctrl_14 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_15 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_16 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_17 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_12 = wx.Button(self.main_panel, 201, "Log")
-        self.button_6 = wx.Button(self.main_panel, 102, "Start")
+        self.button_12 = wx.Button(self.main_panel, 201, _("日志"))
+        self.button_6 = wx.Button(self.main_panel, 102, _("开始"))
         self.text_ctrl_19 = wx.TextCtrl(self.main_panel, 12, "", style=wx.TE_READONLY)
         self.text_ctrl_20 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_21 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_22 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_23 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_13 = wx.Button(self.main_panel, 202, "Log")
-        self.button_7 = wx.Button(self.main_panel, 103, "Start")
+        self.button_13 = wx.Button(self.main_panel, 202, _("日志"))
+        self.button_7 = wx.Button(self.main_panel, 103, _("开始"))
         self.text_ctrl_25 = wx.TextCtrl(self.main_panel, 13, "", style=wx.TE_READONLY)
         self.text_ctrl_26 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_27 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_28 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_29 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_14 = wx.Button(self.main_panel, 203, "Log")
-        self.button_8 = wx.Button(self.main_panel, 104, "Start")
+        self.button_14 = wx.Button(self.main_panel, 203, _("日志"))
+        self.button_8 = wx.Button(self.main_panel, 104, _("开始"))
         self.text_ctrl_31 = wx.TextCtrl(self.main_panel, 14, "", style=wx.TE_READONLY)
         self.text_ctrl_32 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_33 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_34 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_35 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_15 = wx.Button(self.main_panel, 204, "Log")
-        self.button_9 = wx.Button(self.main_panel, 105, "Start")
+        self.button_15 = wx.Button(self.main_panel, 204, _("日志"))
+        self.button_9 = wx.Button(self.main_panel, 105, _("开始"))
         self.text_ctrl_37 = wx.TextCtrl(self.main_panel, 15, "", style=wx.TE_READONLY)
         self.text_ctrl_38 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_39 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_40 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_41 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_16 = wx.Button(self.main_panel, 205, "Log")
-        self.button_10 = wx.Button(self.main_panel, 106, "Start")
+        self.button_16 = wx.Button(self.main_panel, 205, _("日志"))
+        self.button_10 = wx.Button(self.main_panel, 106, _("开始"))
         self.text_ctrl_43 = wx.TextCtrl(self.main_panel, 16, "", style=wx.TE_READONLY)
         self.text_ctrl_44 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_45 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_46 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_47 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_17 = wx.Button(self.main_panel, 206, "Log")
-        self.button_11 = wx.Button(self.main_panel, 107, "Start")
+        self.button_17 = wx.Button(self.main_panel, 206, _("日志"))
+        self.button_11 = wx.Button(self.main_panel, 107, _("开始"))
         self.text_ctrl_49 = wx.TextCtrl(self.main_panel, 17, "", style=wx.TE_READONLY)
         self.text_ctrl_50 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_51 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_52 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_53 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
-        self.button_18 = wx.Button(self.main_panel, 207, "Log")
+        self.button_18 = wx.Button(self.main_panel, 207, _("日志"))
         # button list
         self.button_start_list = (self.button_4, self.button_5, self.button_6, self.button_7, self.button_8, self.button_9, self.button_10, self.button_11)
         self.button_log_list = (self.button_2, self.button_12, self.button_13, self.button_14, self.button_15, self.button_16, self.button_17, self.button_18)
@@ -201,7 +203,7 @@ class FactoryFrame(wx.Frame):
         self.statusBar.SetStatusWidths([200, -1, 155])
 
         # statusbar fields
-        statusBar_fields = [u"  Welcome to QuecPython", u" Current status: ready...", " 0000-00-00 00:00:00"]
+        statusBar_fields = [_(u"  Welcome to QuecPython"), _(u" Current status: ready..."), " 0000-00-00 00:00:00"]
         for i in range(len(statusBar_fields)):
             self.statusBar.SetStatusText(statusBar_fields[i], i)
 
@@ -251,7 +253,7 @@ class FactoryFrame(wx.Frame):
     def __do_layout(self):
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
-        sizer_5 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, "Factory Test"), wx.VERTICAL)
+        sizer_5 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, _("工厂测试")), wx.VERTICAL)
         sizer_14 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_13 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_12 = wx.BoxSizer(wx.HORIZONTAL)
@@ -261,8 +263,8 @@ class FactoryFrame(wx.Frame):
         sizer_8 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_7 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_6 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_4 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, "Load Config File"), wx.HORIZONTAL)
-        sizer_3 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, "Load Test Script"), wx.HORIZONTAL)
+        sizer_4 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, _("选择配置文件")), wx.HORIZONTAL)
+        sizer_3 = wx.StaticBoxSizer(wx.StaticBox(self.main_panel, wx.ID_ANY, _("选择测试脚本")), wx.HORIZONTAL)
         sizer_1.Add((20, 4), 0, 0, 0)
         sizer_2.Add((20, 4), 0, 0, 0)
         sizer_3.Add((4, 20), 0, 0, 0)
@@ -281,22 +283,22 @@ class FactoryFrame(wx.Frame):
         sizer_6.Add((20, 20), 0, 0, 0)
         sizer_6.Add(self.button_3, 0, 0, 0)
         sizer_6.Add((20, 20), 0, 0, 0)
-        label_9 = wx.StaticText(self.main_panel, wx.ID_ANY, u"Port")
+        label_9 = wx.StaticText(self.main_panel, wx.ID_ANY, _(u"端口"))
         sizer_6.Add(label_9, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((60, 20), 0, 0, 0)
-        label_10 = wx.StaticText(self.main_panel, wx.ID_ANY, "IMEI")
+        label_10 = wx.StaticText(self.main_panel, wx.ID_ANY, _("IMEI"))
         sizer_6.Add(label_10, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((100, 20), 0, 0, 0)
-        label_11 = wx.StaticText(self.main_panel, wx.ID_ANY, "ICCID")
+        label_11 = wx.StaticText(self.main_panel, wx.ID_ANY, _("ICCID"))
         sizer_6.Add(label_11, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((100, 20), 0, 0, 0)
-        label_12 = wx.StaticText(self.main_panel, wx.ID_ANY, u"Test Time")
+        label_12 = wx.StaticText(self.main_panel, wx.ID_ANY, _(u"测试时间"))
         sizer_6.Add(label_12, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((10, 20), 0, 0, 0)
-        label_13 = wx.StaticText(self.main_panel, wx.ID_ANY, u"Test Result")
+        label_13 = wx.StaticText(self.main_panel, wx.ID_ANY, _(u"测试结果"))
         sizer_6.Add(label_13, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((100, 20), 0, 0, 0)
-        label_14 = wx.StaticText(self.main_panel, wx.ID_ANY, u"View Log")
+        label_14 = wx.StaticText(self.main_panel, wx.ID_ANY, _(u"查看日志"))
         sizer_6.Add(label_14, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_6.Add((50, 20), 0, 0, 0)
         sizer_5.Add(sizer_6, 0, wx.EXPAND | wx.TOP, 0)
@@ -495,7 +497,7 @@ class FactoryFrame(wx.Frame):
         if py_cmd.script_check():
             self.text_ctrl_py.SetValue(dlg.GetPath())
         else:
-            wx.MessageBox(u'The py code has syntax errors', u'Warn', wx.YES_DEFAULT | wx.ICON_INFORMATION)
+            wx.MessageBox(_(u'py代码有语法错误'), u'Warn', wx.YES_DEFAULT | wx.ICON_INFORMATION)
 
     def __load_json_file(self, event):
         print("json button is press")
@@ -519,14 +521,14 @@ class FactoryFrame(wx.Frame):
             else:
                 return None
         else:
-            wx.MessageBox(u'请先选择测试文件', u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
+            wx.MessageBox(_(u'请先选择测试文件'), u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
 
     def test_all_start(self, event):
         self.__port_det(True)  # 检测停止
         if self.text_ctrl_py.GetValue():
             pass
         else:
-            wx.MessageBox(u'请先选择测试文件', u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
+            wx.MessageBox(_(u'请先选择测试文件'), u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
             return None
         for i in self.port_ctrl_list:
             button_event_id = i.GetId() - 10
@@ -693,7 +695,7 @@ class DialogControl(wx.Dialog):
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
         self.panel_sizer = wx.BoxSizer(wx.VERTICAL)
         self.vbox1 = wx.BoxSizer(wx.VERTICAL)
-        self.cmd_content = wx.StaticText(self.panel, wx.ID_ANY, u"测试log:")
+        self.cmd_content = wx.StaticText(self.panel, wx.ID_ANY, _(u"测试日志:"))
         self.vbox1.Add(self.cmd_content, proportion=1, flag=wx.LEFT | wx.EXPAND,)
         self.text_content = wx.TextCtrl(self.panel, wx.ID_ANY, style=wx.TE_MULTILINE)
         self.text_content.SetMinSize((300, 350))
@@ -715,6 +717,20 @@ class DialogControl(wx.Dialog):
 
 
 class MyApp(wx.App):
+    languageTab = locale.getdefaultlocale()[0]
+    print("languageTab: ", languageTab)
+    # 根据系统语言自动设置语言
+    if languageTab == "zh_CN":
+        t = gettext.translation('Chinese', PROJECT_ABSOLUTE_PATH + "\\locale", languages=["zh_CN"])
+        t.install()
+    elif languageTab == "en":
+        t = gettext.translation('English', PROJECT_ABSOLUTE_PATH + "\\locale", languages=["en"])
+        t.install()
+    else:
+        languageTab = "en"
+        t = gettext.translation('English', PROJECT_ABSOLUTE_PATH + "\\locale", languages=["en"])
+        t.install()
+
     def __init__(self):
         # print("init-----")
         wx.App.__init__(self, redirect=False, filename="", useBestVisual=True, clearSigInt=True)

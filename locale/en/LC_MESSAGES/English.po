@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-11-04 11:03+0800\n"
+"PO-Revision-Date: 2022-05-05 15:33+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp936\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "编辑Py文件"
+msgstr "Edit Py File"
+
+msgid "编辑Excel文件"
+msgstr "Edit Excel File"
+
+msgid "编辑"
+msgstr "Edit"
+
+msgid "工具日志"
+msgstr "Tool Log"
+
+msgid "模组日志"
+msgstr "Module Log"
+
+msgid "日志"
+msgstr "Log"
+
+msgid "选择"
+msgstr "Load"
+
+msgid "全部开始"
+msgstr "Start All"
+
+msgid "开始"
+msgstr "Start"
+
+msgid "工厂测试"
+msgstr "Factory Test"
+
+msgid "选择配置文件"
+msgstr "Load Config File"
+
+msgid "选择测试脚本"
+msgstr "Load Test Script"
+
+msgid "端口"
+msgstr "Port"
+
+msgid "IMEI"
+msgstr "IMEI"
+
+msgid "ICCID"
+msgstr "ICCID"
+
+msgid "测试时间"
+msgstr "Test Time"
+
+msgid "测试结果"
+msgstr "Test Result"
+
+msgid "查看日志"
+msgstr "View Log"
+
+
+msgid "py代码有语法错误"
+msgstr "The py code has syntax errors"
+
+msgid "请先选择测试文件"
+msgstr "Please select test file"
+
+msgid "测试日志"
+msgstr "Test log"
+
+msgid "当前状态: 就绪..."
+msgstr " Current status: ready..."
+
+msgid "欢迎使用QuecPython"
+msgstr "  Welcome to QuecPython"
+
+
+
+
+
+
+
+
+
