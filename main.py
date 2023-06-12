@@ -24,8 +24,12 @@ from log_redirect import RedirectErr, RedirectStd
 from pubsub import pub
 from queue import Queue
 
-PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
+# PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 
+if hasattr(sys, '_MEIPASS'):
+    PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.realpath(sys.executable))
+else:
+    PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class FactoryFrame(wx.Frame):
     def __init__(self, *args, **kwargs):

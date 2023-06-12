@@ -121,5 +121,5 @@ python main.py
 # 如果上面使用单独安装的形式，需要安装一下pyinstaller库
 pip install pyinstaller -i https://pypi.tuna.tsinghua.edu.cn/simple
 # 编译成exe程序，输出exe目录在./dist/下
-pyinstaller -F-w --win-private-assemblies --icon images/quectel.ico -w ./main.py
+pyinstaller -F -w --win-private-assemblies --icon images/quectel.ico -w ./main.py
 ```
