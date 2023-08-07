@@ -23,6 +23,8 @@ import serial_handler
 from log_redirect import RedirectErr, RedirectStd
 from pubsub import pub
 from queue import Queue
+import codecs
+import json
 
 # PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,6 +38,7 @@ class FactoryFrame(wx.Frame):
         kwargs["style"] = kwargs.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwargs)
         self.SetSize((876, 600))
+        self.Center()
         # stdout log
         # sys.stderr = RedirectErr(self, PROJECT_ABSOLUTE_PATH)
         # sys.stdout = RedirectStd(self, PROJECT_ABSOLUTE_PATH)
@@ -75,6 +78,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_10 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_11 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_2 = wx.Button(self.main_panel, 200, _("日志"))
+
         self.button_5 = wx.Button(self.main_panel, 101, _("开始"))
         self.text_ctrl_13 = wx.TextCtrl(self.main_panel, 11, "", style=wx.TE_READONLY)
         self.text_ctrl_14 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -82,6 +86,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_16 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_17 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_12 = wx.Button(self.main_panel, 201, _("日志"))
+
         self.button_6 = wx.Button(self.main_panel, 102, _("开始"))
         self.text_ctrl_19 = wx.TextCtrl(self.main_panel, 12, "", style=wx.TE_READONLY)
         self.text_ctrl_20 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -89,6 +94,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_22 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_23 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_13 = wx.Button(self.main_panel, 202, _("日志"))
+
         self.button_7 = wx.Button(self.main_panel, 103, _("开始"))
         self.text_ctrl_25 = wx.TextCtrl(self.main_panel, 13, "", style=wx.TE_READONLY)
         self.text_ctrl_26 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -96,6 +102,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_28 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_29 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_14 = wx.Button(self.main_panel, 203, _("日志"))
+
         self.button_8 = wx.Button(self.main_panel, 104, _("开始"))
         self.text_ctrl_31 = wx.TextCtrl(self.main_panel, 14, "", style=wx.TE_READONLY)
         self.text_ctrl_32 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -103,6 +110,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_34 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_35 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_15 = wx.Button(self.main_panel, 204, _("日志"))
+
         self.button_9 = wx.Button(self.main_panel, 105, _("开始"))
         self.text_ctrl_37 = wx.TextCtrl(self.main_panel, 15, "", style=wx.TE_READONLY)
         self.text_ctrl_38 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -110,6 +118,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_40 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_41 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_16 = wx.Button(self.main_panel, 205, _("日志"))
+
         self.button_10 = wx.Button(self.main_panel, 106, _("开始"))
         self.text_ctrl_43 = wx.TextCtrl(self.main_panel, 16, "", style=wx.TE_READONLY)
         self.text_ctrl_44 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -117,6 +126,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_46 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_47 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_17 = wx.Button(self.main_panel, 206, _("日志"))
+
         self.button_11 = wx.Button(self.main_panel, 107, _("开始"))
         self.text_ctrl_49 = wx.TextCtrl(self.main_panel, 17, "", style=wx.TE_READONLY)
         self.text_ctrl_50 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
@@ -124,6 +134,7 @@ class FactoryFrame(wx.Frame):
         self.text_ctrl_52 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.text_ctrl_53 = wx.TextCtrl(self.main_panel, wx.ID_ANY, "", style=wx.TE_READONLY)
         self.button_18 = wx.Button(self.main_panel, 207, _("日志"))
+
         # button list
         self.button_start_list = (self.button_4, self.button_5, self.button_6, self.button_7, self.button_8, self.button_9, self.button_10, self.button_11)
         self.button_log_list = (self.button_2, self.button_12, self.button_13, self.button_14, self.button_15, self.button_16, self.button_17, self.button_18)
@@ -142,22 +153,12 @@ class FactoryFrame(wx.Frame):
                                  self.text_ctrl_35, self.text_ctrl_41, self.text_ctrl_47, self.text_ctrl_53)
         self.__py_exec_result = list(" ") * 8
         self.__py_test_fp = None  # 测试的脚本文件
-        self.__exec_py_cmd_list = ["import example", "example.exec('/usr/test.py')"]
+        self.__exec_py_cmd_list = ["from usr.test import TestBase"]
         self.__test_result = [0 for i in range(8)]  # 测试结果
         self.statusBarTimer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.__status_bar_timer_fresh, self.statusBarTimer)
         self.statusBarTimer.Start(100)
         pub.subscribe(self.__update_status_bar, "statusBarUpdate")
-
-        self.__excel_handler = file_handler.ExcelHandler(PROJECT_ABSOLUTE_PATH + "\\Test-Result.xlsx")  # Init Excel
-        rows, columns = self.__excel_handler.get_rows_columns()
-        if rows == 1 and columns == 1:
-            self.__excel_handler.set_cell_value(1, 1, "No.")
-            self.__excel_handler.set_cell_value(1, 2, "Com Port")
-            self.__excel_handler.set_cell_value(1, 3, "IMEI")
-            self.__excel_handler.set_cell_value(1, 4, "ICCID")
-            self.__excel_handler.set_cell_value(1, 5, "Test Result")
-            self.__excel_handler.set_cell_value(1, 6, "Test Log")
 
         # event message queue
         self.message_queue = Queue(maxsize=10)
@@ -515,6 +516,13 @@ class FactoryFrame(wx.Frame):
 
     def test_start(self, event):
         button_event_id = event.GetId() - 100  # button ID 100开始
+
+        jsonName = PROJECT_ABSOLUTE_PATH + "\\sort_setting.json"
+        with codecs.open(jsonName, 'r', 'utf-8') as f:
+            data = json.load(f)
+            self.testFunctions = data["sort"]
+            self.testMessages = data["message"]
+
         if self.text_ctrl_py.GetValue():
             if self.port_ctrl_list[button_event_id].GetValue():
                 # 点击开始时再初始化
@@ -579,6 +587,7 @@ class FactoryFrame(wx.Frame):
                 [i.SetValue("") for i in j]
             for i, element in enumerate(self.button_start_list):
                 self.button_log_list[i].Enable(False)
+                # self.button_next_list[i].Enable(False)
                 if self._channel_list[i]:
                     self.port_ctrl_list[i].SetValue(self._channel_list[i])
                     self.button_start_list[i].Enable(True)
@@ -606,23 +615,61 @@ class FactoryFrame(wx.Frame):
         # 测试时间&结果页面刷新  线程ID
         test_res_display = threading.Thread(target=self.__test_time_bar, args=(arg1["id"], arg1["time"], arg1["result"]))
         test_res_display.start()
-        test_result = ser.write_module(arg1["script"], self.__exec_py_cmd_list)  # 写入脚本开始测试
-        ret_result = test_result.split(self.__exec_py_cmd_list[1])[1].split("\r\n")[1:-1]     # get recv list
-        self.__py_exec_result[arg1["id"]] = test_result   # 设置测试结果
-        self.logger.write_file(arg1["PortInfo"], test_result)
+        ser.write_module(arg1["script"], self.__exec_py_cmd_list)  # 写入脚本开始测试
+        ser.ret_result()
+
+        ret_result = []
+        log = ""
+        length = len(self.testFunctions)
+        for i in range(length):
+            testFunction = self.testFunctions[i]
+            message = self.testMessages[i]
+
+            cmd = "TestBase." + testFunction[0] + "()"
+            ser.exec_cmd(cmd)
+
+            test_result = ser.ret_result()  # get recv list
+            log += test_result
+            boolean = test_result.split("\r\n")[1:-1]
+
+            if testFunction[1] == 1:
+                dlg  = wx.MessageBox("      当前测试项为: " + message + "\r\n\r\n      请确认该测试项 【是否通过】", self.port_ctrl_list[arg1["id"]].GetValue(), wx.YES_NO)
+                if dlg == wx.YES:
+                    boolean = ["True"]
+                else:
+                    boolean = ["False"]
+
+            ret_result += boolean
+            arg1["result"].SetValue("process: "+str(int(i/length*100))+"%")
+
+        self.__py_exec_result[arg1["id"]] = "\r\n".join([i[0]+": "+i[1] for i in list(zip(self.testMessages, ret_result))])   # 设置测试结果
+        self.logger.write_file(arg1["PortInfo"], log)
+
+        self.__init_excel(self.port_ctrl_list[arg1["id"]].GetValue() + "_" + self.port_imei_list[arg1["id"]].GetValue())
         # TODO excel写入不要列表形式
         if "False" not in ret_result:
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 1})
-            self.__excel_write([arg1["PortInfo"], arg1["Imei"], arg1["Iccid"], "Success", str(ret_result)])
+            self.__excel_write([arg1["PortInfo"], arg1["Imei"], arg1["Iccid"], "Success", str(list(zip(self.testMessages, ret_result)))])
         else:
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 2})
-            self.__excel_write([arg1["PortInfo"], arg1["Imei"], arg1["Iccid"], "Fail", str(ret_result)])
+            self.__excel_write([arg1["PortInfo"], arg1["Imei"], arg1["Iccid"], "Fail", str(list(zip(self.testMessages, ret_result)))])
 
     def port_test_end_handler(self, arg1):
         self.__test_result[arg1["id"]] = arg1["result"]   # 设置测试结果
         self.button_log_list[arg1["id"]].Enable(True)
         pub.sendMessage('statusBarUpdate', arg1=["The test has been completed", 1])
         self.__port_det(False)
+
+    def __init_excel(self, sheet_name):
+        self.__excel_handler = file_handler.ExcelHandler(PROJECT_ABSOLUTE_PATH + "\\Test-Result.xlsx", sheet_name)  # Init Excel
+        rows, columns = self.__excel_handler.get_rows_columns()
+        if rows == 1 and columns == 1:
+            self.__excel_handler.set_cell_value(1, 1, "No.")
+            self.__excel_handler.set_cell_value(1, 2, "Com Port")
+            self.__excel_handler.set_cell_value(1, 3, "IMEI")
+            self.__excel_handler.set_cell_value(1, 4, "ICCID")
+            self.__excel_handler.set_cell_value(1, 5, "Test Result")
+            self.__excel_handler.set_cell_value(1, 6, "Test Log")
 
     def __excel_write(self, result):
         if self.__excel_handler:

@@ -1,0 +1,4 @@
+{
+	"sort": [["det_file_space", 1], ["det_signal", 0]],
+	"message": ["内存检测", "信号检测"]
+}

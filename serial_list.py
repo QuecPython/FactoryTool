@@ -43,6 +43,8 @@ class SerialDetection(threading.Thread):
                 pass
             else:
                 if serial_list == [] or serial_list != self.serPort.comports():
+                    # serial_port = self.get_com_number("0x2C7C:0x6005", "x.8")
+                    # serial_port.extend(self.get_com_number("0x2C7C:0x6005", "x.5"))
                     serial_port = self.get_com_number("0x2C7C:0x0901", "x.8")
                     serial_port.extend(self.get_com_number("0x2C7C:0x6001", "x.5"))
                     # print("设备列表为{}".format(serial_port))

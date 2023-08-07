@@ -113,7 +113,7 @@ class SerialHandler(SerialPort):
             print("文件写入异常：{}".format(e))
         finally:
             source.close()
-            return self.exec_py(py_cmd)
+            return self.exec_cmd(py_cmd[0])
 
     def exec_py(self, cmd):
         self._send_cmd(cmd[0])
@@ -121,6 +121,9 @@ class SerialHandler(SerialPort):
         self._send_cmd(cmd[1])
         time.sleep(1)
         return self.ret_result()
+
+    def exec_cmd(self, cmd):
+        self._send_cmd(cmd)
 
     async def run_cmd(self,source:list, log_text_ctrl):
         result_list = ""
@@ -132,7 +135,13 @@ class SerialHandler(SerialPort):
         return result_list
 
     def ret_result(self):
-        return self._conn.read(self._conn.inWaiting()).decode('utf8')
+        data = ""
+        for i in range(30):
+            data += self._conn.read(self._conn.inWaiting()).decode("utf-8", errors="ignore")
+            if data.endswith(">>> "):
+                break
+            time.sleep(0.5)
+        return data
 
     def exit_test(self):
         self._close_conn()
