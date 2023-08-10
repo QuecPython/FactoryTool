@@ -10,7 +10,7 @@ class TestBase(object):
     def det_signal():
         if sim.getStatus() == 1:
             if net.getConfig()[0] == 5:
-                return True
+                pass
             else:
                 return False
         else:
@@ -19,7 +19,24 @@ class TestBase(object):
     @staticmethod
     def det_file_space():
         if uos.statvfs('usr')[3] > 5:
-            return True
+            # return True
+            pass
+        else:
+            return False
+
+    @staticmethod
+    def det_file_space2():
+        if uos.statvfs('usr')[3] > 5:
+            # return True
+            pass
+        else:
+            return False
+
+    @staticmethod
+    def det_file_space3():
+        if uos.statvfs('usr')[3] > 5:
+            # return True
+            pass
         else:
             return False
     # ------该区域为测试代码------

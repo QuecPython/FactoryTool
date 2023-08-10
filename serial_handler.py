@@ -107,6 +107,8 @@ class SerialHandler(SerialPort):
                 self._send_cmd("f.close()")
                 self._conn.write(b"\x04")
                 self._conn.write(b"\x02")
+                self._conn.write(b"\x04")
+                # self._conn.write(b"\x02")
             else:
                 print("串口异常")
         except Exception as e:

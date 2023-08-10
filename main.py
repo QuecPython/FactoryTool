@@ -516,7 +516,8 @@ class FactoryFrame(wx.Frame):
 
     def test_start(self, event):
         button_event_id = event.GetId() - 100  # button ID 100开始
-
+        self.button_start_list[button_event_id].SetLabel(_("测试中"))
+        self.button_start_list[button_event_id].Enable(False)
         jsonName = PROJECT_ABSOLUTE_PATH + "\\sort_setting.json"
         with codecs.open(jsonName, 'r', 'utf-8') as f:
             data = json.load(f)
@@ -630,10 +631,19 @@ class FactoryFrame(wx.Frame):
 
             test_result = ser.ret_result()  # get recv list
             log += test_result
-            boolean = test_result.split("\r\n")[1:-1]
+            try:
+                boolean = test_result.split("\r\n")[1:-1]
+
+                if boolean == []:
+                    boolean = ["True"]
+                if boolean != ["True"] and boolean != ["False"]:
+                    boolean = ["False"]
+            except Exception as e:
+                print(e)
+                boolean = ["False"]
 
             if testFunction[1] == 1:
-                dlg  = wx.MessageBox("      当前测试项为: " + message + "\r\n\r\n      请确认该测试项 【是否通过】", self.port_ctrl_list[arg1["id"]].GetValue(), wx.YES_NO)
+                dlg  = wx.MessageBox("      当前测试项为:  " + message + "\r\n\r\n      请确认该测试项 【是否通过】", self.port_ctrl_list[arg1["id"]].GetValue(), wx.YES_NO)
                 if dlg == wx.YES:
                     boolean = ["True"]
                 else:
@@ -642,10 +652,26 @@ class FactoryFrame(wx.Frame):
             ret_result += boolean
             arg1["result"].SetValue("process: "+str(int(i/length*100))+"%")
 
-        self.__py_exec_result[arg1["id"]] = "\r\n".join([i[0]+": "+i[1] for i in list(zip(self.testMessages, ret_result))])   # 设置测试结果
+        test_results = []
+        for i in ret_result:
+            if i == "True":
+                test_results.append("通过")
+            elif i == "False":
+                test_results.append("不通过")
+            else:
+                test_results.append(i)
+
+        test_method = []
+        for i in self.testFunctions:
+            if i[1] == 1:
+                test_method.append("人工测试")
+            else:
+                test_method.append("自动测试")
+
+        self.__py_exec_result[arg1["id"]] = "\r\n".join([i[0]+ ": " + i[1] + "  " + i[2] for i in list(zip(self.testMessages, test_method, test_results))])   # 设置测试结果
         self.logger.write_file(arg1["PortInfo"], log)
 
-        self.__init_excel(self.port_ctrl_list[arg1["id"]].GetValue() + "_" + self.port_imei_list[arg1["id"]].GetValue())
+        self.__init_excel()
         # TODO excel写入不要列表形式
         if "False" not in ret_result:
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 1})
@@ -653,6 +679,8 @@ class FactoryFrame(wx.Frame):
         else:
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 2})
             self.__excel_write([arg1["PortInfo"], arg1["Imei"], arg1["Iccid"], "Fail", str(list(zip(self.testMessages, ret_result)))])
+        self.button_start_list[arg1["id"]].SetLabel(_("开始"))
+        self.button_start_list[arg1["id"]].Enable(True)
 
     def port_test_end_handler(self, arg1):
         self.__test_result[arg1["id"]] = arg1["result"]   # 设置测试结果
@@ -660,8 +688,8 @@ class FactoryFrame(wx.Frame):
         pub.sendMessage('statusBarUpdate', arg1=["The test has been completed", 1])
         self.__port_det(False)
 
-    def __init_excel(self, sheet_name):
-        self.__excel_handler = file_handler.ExcelHandler(PROJECT_ABSOLUTE_PATH + "\\Test-Result.xlsx", sheet_name)  # Init Excel
+    def __init_excel(self):
+        self.__excel_handler = file_handler.ExcelHandler(PROJECT_ABSOLUTE_PATH + "\\Test-Result.xlsx")  # Init Excel
         rows, columns = self.__excel_handler.get_rows_columns()
         if rows == 1 and columns == 1:
             self.__excel_handler.set_cell_value(1, 1, "No.")

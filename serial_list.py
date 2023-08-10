@@ -47,6 +47,7 @@ class SerialDetection(threading.Thread):
                     # serial_port.extend(self.get_com_number("0x2C7C:0x6005", "x.5"))
                     serial_port = self.get_com_number("0x2C7C:0x0901", "x.8")
                     serial_port.extend(self.get_com_number("0x2C7C:0x6001", "x.5"))
+                    serial_port.extend(self.get_com_number("0x2C7C:0x6002", "x.5"))
                     # print("设备列表为{}".format(serial_port))
                     pub.sendMessage('serialUpdate', arg1=serial_port)
             time.sleep(1)
