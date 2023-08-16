@@ -20,21 +20,15 @@ class ExcelHandler(object):
     handle test result Excel
     excel_file: filename include full path
     """
-    def __init__(self, excel_file, sheet_name):
+    def __init__(self, excel_file):
         self.file = excel_file
         if os.path.exists(self.file):
             pass
         else:
             wb = openpyxl.Workbook()
-            ws = wb[wb.sheetnames[0]]
-            ws.title = sheet_name
             wb.save(self.file)
         self.wb = openpyxl.load_workbook(self.file)
-        if sheet_name in self.wb.sheetnames[0]:
-            pass
-        else:
-            self.wb.create_sheet(sheet_name)
-        self.ws = self.wb[sheet_name]
+        self.ws = self.wb[self.wb.sheetnames[0]]
 
 
     def get_rows_columns(self):

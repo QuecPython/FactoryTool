@@ -107,13 +107,15 @@ class SerialHandler(SerialPort):
                 self._send_cmd("f.close()")
                 self._conn.write(b"\x04")
                 self._conn.write(b"\x02")
+                self._conn.write(b"\x04")
             else:
                 print("串口异常")
         except Exception as e:
             print("文件写入异常：{}".format(e))
+            return (False, e)
         finally:
             source.close()
-            return self.exec_cmd(py_cmd[0])
+            return (True, self.exec_cmd(py_cmd[0]))
 
     def exec_py(self, cmd):
         self._send_cmd(cmd[0])
