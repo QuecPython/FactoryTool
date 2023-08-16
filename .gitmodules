@@ -1,3 +1,3 @@
 [submodule "QuecPython_Ymodem"]
 	path = QuecPython_Ymodem
-	url = git@github.com:supremeys/QuecPython_Ymodem.git
+	url = https://github.com/QuecPython/QuecPython_Ymodem.git
