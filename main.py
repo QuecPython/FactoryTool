@@ -20,6 +20,7 @@ import threading
 import file_handler
 import serial_list
 import serial_handler
+import configparser
 from log_redirect import RedirectErr, RedirectStd
 from pubsub import pub
 from queue import Queue
@@ -30,6 +31,43 @@ if hasattr(sys, '_MEIPASS'):
     PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.realpath(sys.executable))
 else:
     PROJECT_ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
+
+
+def set_config(PROJECT_ABSOLUTE_PATH, frame):
+    if not os.path.exists(PROJECT_ABSOLUTE_PATH+"\\config.ini"):
+        return
+    conf = configparser.ConfigParser(interpolation=None)
+    conf.read(PROJECT_ABSOLUTE_PATH+"\\config.ini", encoding='utf-8')
+    py_file = conf.get("software", "py_file")
+    json_file = conf.get("software", "json_file")
+
+    if py_file or json_file:
+        no_exist = []
+        msg = wx.MessageBox(_(u'是否恢复上次文件'), _(u'提示'), wx.YES_NO)
+        if msg == wx.YES:
+            if py_file:
+                if os.path.exists(py_file):
+                    frame.text_ctrl_py.SetValue(py_file)
+                else:
+                    conf.set("software", "py_file", "")
+                    wx.MessageBox(py_file + _(u"文件不存在"), _(u"提示"), wx.YES_DEFAULT | wx.ICON_INFORMATION)
+
+            if json_file:
+                if os.path.exists(py_file):
+                    frame.text_ctrl_json.SetValue(json_file)
+                    frame.load_json_file(0, json_file)
+                else:
+                    conf.set("software", "json_file", "")
+                    wx.MessageBox(json_file + _(u"文件不存在"), _(u"提示"), wx.YES_DEFAULT | wx.ICON_INFORMATION)
+
+            with open(PROJECT_ABSOLUTE_PATH + "\\config.ini", "w+", encoding='utf-8') as f:
+                conf.write(f)
+
+        elif msg == wx.NO:
+            conf.set("software", "py_file", "")
+            conf.set("software", "json_file", "")
+            with open(PROJECT_ABSOLUTE_PATH + "\\config.ini", "w+", encoding='utf-8') as f:
+                conf.write(f)
 
 
 class FactoryFrame(wx.Frame):
@@ -105,7 +143,7 @@ class FactoryFrame(wx.Frame):
 
         # bind Func
         self.Bind(wx.EVT_BUTTON, self.__load_py_file, self.load_py)
-        self.Bind(wx.EVT_BUTTON, self.__load_json_file, self.load_json)
+        self.Bind(wx.EVT_BUTTON, self.load_json_file, self.load_json)
         self.Bind(wx.EVT_BUTTON, self.test_all_start, self.button_all_start)
 
 
@@ -117,6 +155,11 @@ class FactoryFrame(wx.Frame):
 
         # pub message
         pub.subscribe(self.port_update, "serialUpdate")
+
+        self.conf = configparser.ConfigParser(interpolation=None)
+        if not os.path.exists(PROJECT_ABSOLUTE_PATH+"\\config.ini"):
+            self.initConfigFile()
+        self.conf.read(PROJECT_ABSOLUTE_PATH+"\\config.ini", encoding='utf-8')
 
         self.__set_properties()
         self.__do_layout()
@@ -186,6 +229,13 @@ class FactoryFrame(wx.Frame):
             p = subprocess.Popen("explorer.exe " + PROJECT_ABSOLUTE_PATH + "\\logs\\apps\\", shell=True)
         event.Skip()
 
+    def initConfigFile(self):
+        self.conf.add_section("software")
+        self.conf.set("software", "py_file", "")
+        self.conf.set("software", "json_file", "")
+        with open(PROJECT_ABSOLUTE_PATH + "\\config.ini", "w+", encoding='utf-8') as f:
+            self.conf.write(f)
+
     def __load_py_file(self, event):
         defDir, defFile = '', ''  # default dir/ default file
         dlg = wx.FileDialog(self, u'Open Py File', defDir, defFile, 'Python file (*.py)|*.py',
@@ -195,43 +245,49 @@ class FactoryFrame(wx.Frame):
         py_cmd = file_handler.ScriptHandler(dlg.GetPath())
         if py_cmd.script_check():
             self.text_ctrl_py.SetValue(dlg.GetPath())
+            self.conf.set("software", "py_file", dlg.GetPath())
+            with open(PROJECT_ABSOLUTE_PATH + "\\config.ini", "w+", encoding='utf-8') as f:
+                self.conf.write(f)
         else:
             wx.MessageBox(_(u'py代码有语法错误'), u'Warn', wx.YES_DEFAULT | wx.ICON_INFORMATION)
 
-    def __load_json_file(self, event):
+    def load_json_file(self, event, json_file=None):
         print("json button is press")
-        defDir, defFile = '', ''  # default dir/ default file
-        dlg = wx.FileDialog(self, u'Open Config File', defDir, defFile, 'Config file (*.json)|*.json',
-                            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
-        if dlg.ShowModal() == wx.ID_CANCEL:
-            return
-
-        # jsonName = PROJECT_ABSOLUTE_PATH + "\\sort_setting.json"
+        if event != 0:
+            defDir, defFile = '', ''  # default dir/ default file
+            dlg = wx.FileDialog(self, u'Open Config File', defDir, defFile, 'Config file (*.json)|*.json',
+                                wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                return
+            json_file = dlg.GetPath()
         try:
-            with codecs.open(dlg.GetPath(), 'r', 'utf-8') as f:
+            with codecs.open(json_file, 'r', 'utf-8') as f:
                 data = json.load(f)
                 print(data)
                 info = data["info"]
                 self.testFunctions = [i[1:] for i in info]
                 self.testMessages = [i[0] for i in info]
-            self.text_ctrl_json.SetValue(dlg.GetPath())
+            self.text_ctrl_json.SetValue(json_file)
+            self.conf.set("software", "json_file", json_file)
+            with open(PROJECT_ABSOLUTE_PATH + "\\config.ini", "w+", encoding='utf-8') as f:
+                self.conf.write(f)
+
+            for i, port_ctrl in enumerate(self.port_ctrl_list):
+                if port_ctrl.GetValue():
+                    self.ListCtrl_list[i].DeleteAllItems()
+                    for j, element in enumerate(self.testFunctions):
+                        ListCtrl = self.ListCtrl_list[i]
+                        # testFunction = self.testFunctions[j]
+                        ListCtrl.InsertItem(j, j)
+                        ListCtrl.SetItem(j, 0, self.testMessages[j])
+                        if element[1] == 1:
+                            ListCtrl.SetItem(j, 1, "人工检测")
+                        else:
+                            ListCtrl.SetItem(j, 1, "自动检测")
         except Exception as e:
             print(e)
             wx.MessageBox(_(u'请选择正确的配置文件'), u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
             return
-
-        for i, port_ctrl in enumerate(self.port_ctrl_list):
-            if port_ctrl.GetValue():
-                self.ListCtrl_list[i].DeleteAllItems()
-                for j, element in enumerate(self.testFunctions):
-                    ListCtrl = self.ListCtrl_list[i]
-                    # testFunction = self.testFunctions[j]
-                    ListCtrl.InsertItem(j, j)
-                    ListCtrl.SetItem(j, 0, self.testMessages[j])
-                    if element[1] == 1:
-                        ListCtrl.SetItem(j, 1, "人工检测")
-                    else:
-                        ListCtrl.SetItem(j, 1, "自动检测")
 
     def test_start(self, event):
         button_event_id = event.GetId() - 100  # button ID 100开始
@@ -285,7 +341,7 @@ class FactoryFrame(wx.Frame):
                 return None
 
     def port_update(self, arg1):
-        # print("message:{}".format(arg1))
+        print("message:{}".format(arg1))
         self.message_queue.put({"msg_id": "PortUpdate", "PortInfo": arg1})
 
     def port_update_handler(self, arg1):
@@ -337,41 +393,48 @@ class FactoryFrame(wx.Frame):
     def port_test_handler(self, arg1):
         print("start test")
         ID = arg1["id"]
-        ser = serial_handler.SerialHandler(arg1["PortInfo"])
-
-        result = ser.write_module(arg1["script"], self.__exec_py_cmd_list)  # 写入脚本开始测试
-        if result[0] is False:
-            wx.MessageBox(result[1], u'Error', wx.YES_DEFAULT | wx.ICON_INFORMATION)
+        try:
+            ser = serial_handler.SerialHandler(arg1["PortInfo"])
+            ser.write_module(arg1["script"], self.__exec_py_cmd_list)  # 写入脚本开始测试
+            ser.ret_result()
+        except Exception as e:
+            print(arg1["PortInfo"], e)
+            wx.MessageBox(arg1["PortInfo"]+"串口异常，测试脚本写入失败, error %s"%str(e), u'Error', wx.YES_DEFAULT | wx.ICON_INFORMATION)
             self.message_queue.put({"id": arg1["id"], "msg_id": "PortTestEnd", "result": 1})
             self.button_start_list[arg1["id"]].Enable(True)
             self.procese_num -= 1
             if self.procese_num == 0:
                 self.button_all_start.Enable(True)
             return
-        ser.ret_result()
 
         ret_result = []
         log = ""
         length = len(self.testFunctions)
         for i, testFunction in enumerate(self.testFunctions):
-            self.ListCtrl_list[ID].SetItem(i, 2, "测试中")
-            self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Yellow")
-
-            message = self.testMessages[i]
-
-            cmd = "TestBase." + testFunction[0] + "()"
-            ser.exec_cmd(cmd)
-
-            test_result = ser.ret_result()  # get recv list
-            print(test_result)
-            log += test_result
             try:
-                boolean = test_result.split("\r\n")[1:-1]
+                self.ListCtrl_list[ID].SetItem(i, 2, "测试中")
+                self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Yellow")
 
-                if boolean == []:
-                    boolean = ["True"]
-                if boolean != ["True"] and boolean != ["False"]:
+                message = self.testMessages[i]
+
+                cmd = "TestBase." + testFunction[0] + "()"
+                ser.exec_cmd(cmd)
+
+                test_result = ser.ret_result()  # get recv list
+                self.logger.write_file(arg1["PortInfo"], test_result)
+
+                boolean = test_result.split("\r\n")
+
+                if boolean[-2] == "False":
                     boolean = ["False"]
+                else:
+                    if boolean[-2] == "True":
+                        boolean = ["True"]
+                    elif boolean[-2] == cmd:
+                        boolean = ["True"]
+                    else:
+                        boolean = ["False"]
+
             except Exception as e:
                 print(e)
                 boolean = ["False"]
@@ -407,8 +470,6 @@ class FactoryFrame(wx.Frame):
                 test_method.append("人工测试")
             else:
                 test_method.append("自动测试")
-
-        self.logger.write_file(arg1["PortInfo"], log)
 
         # TODO excel写入不要列表形式
         if "False" not in ret_result:
@@ -523,6 +584,8 @@ class MyApp(wx.App):
         tSerialDet = serial_list.SerialDetection()
         tSerialDet.setDaemon(True)  # set as deamon, stop thread while main frame exit
         tSerialDet.start()
+
+        set_config(PROJECT_ABSOLUTE_PATH, self.factory_frame)
         return True
 
 
