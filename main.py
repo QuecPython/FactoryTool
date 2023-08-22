@@ -220,7 +220,7 @@ class FactoryFrame(wx.Frame):
             raw_app_path = r'%s' % app_path
             subprocess.call([raw_file_path, raw_app_path])
         elif event.GetId() == 1003:
-            excel_file = subprocess.Popen(["start", "/WAIT", PROJECT_ABSOLUTE_PATH + "Test-Result.xlsx"], shell=True)
+            excel_file = subprocess.Popen(["start", "/WAIT", PROJECT_ABSOLUTE_PATH + "\\Test-Result.xlsx"], shell=True)
             # psutil.Process(excel_file.pid).get_children()[0].kill()
             excel_file.poll()
         elif event.GetId() == 2001:
@@ -492,8 +492,8 @@ class FactoryFrame(wx.Frame):
         if rows == 1 and columns == 1:
             self.__excel_handler.set_cell_value(1, 1, "No.")
             self.__excel_handler.set_cell_value(1, 2, "Com Port")
-            self.__excel_handler.set_cell_value(1, 5, "Test Result")
-            self.__excel_handler.set_cell_value(1, 6, "Test Log")
+            self.__excel_handler.set_cell_value(1, 3, "Test Result")
+            self.__excel_handler.set_cell_value(1, 4, "Test Log")
 
     def __excel_write(self, result):
         if self.__excel_handler:
