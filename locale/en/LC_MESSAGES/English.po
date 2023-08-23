@@ -65,7 +65,7 @@ msgid "测试时间"
 msgstr "Test Time"
 
 msgid "测试结果"
-msgstr "Test Result"
+msgstr "T-Result"
 
 msgid "查看日志"
 msgstr "View Log"
@@ -86,11 +86,39 @@ msgstr " Current status: ready..."
 msgid "欢迎使用QuecPython"
 msgstr "  Welcome to QuecPython"
 
+msgid "模块日志"
+msgstr "Module Log"
 
+msgid "测项"
+msgstr "Test-Item"
 
+msgid "测试方式"
+msgstr "T-Method"
 
+msgid "人工检测"
+msgstr "Manual Test"
 
+msgid "自动检测"
+msgstr "Automated Test"
 
+msgid "通过"
+msgstr "Pass"
 
+msgid "不通过"
+msgstr "Fail"
 
+msgid "测试中"
+msgstr "Testing"
+
+msgid "      当前测试项为:  "
+msgstr "      The current test item is:  "
+
+msgid "\r\n\r\n      请确认该测试项 【是否通过】"
+msgstr "\r\n\r\n      Please confirm the test item 【Passed or Not】"
+
+msgid "是否恢复上次文件"
+msgstr "Do you want to restore the last file"
+
+msgid "文件不存在"
+msgstr "File does not exist"
 

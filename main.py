@@ -281,9 +281,9 @@ class FactoryFrame(wx.Frame):
                         ListCtrl.InsertItem(j, j)
                         ListCtrl.SetItem(j, 0, self.testMessages[j])
                         if element[1] == 1:
-                            ListCtrl.SetItem(j, 1, "人工检测")
+                            ListCtrl.SetItem(j, 1, _(u"人工检测"))
                         else:
-                            ListCtrl.SetItem(j, 1, "自动检测")
+                            ListCtrl.SetItem(j, 1, _(u"自动检测"))
         except Exception as e:
             print(e)
             wx.MessageBox(_(u'请选择正确的配置文件'), u'提示', wx.YES_DEFAULT | wx.ICON_INFORMATION)
@@ -369,9 +369,9 @@ class FactoryFrame(wx.Frame):
                             ListCtrl.InsertItem(j, j)
                             ListCtrl.SetItem(j, 0, self.testMessages[j])
                             if element[1] == 1:
-                                ListCtrl.SetItem(j, 1, "人工检测")
+                                ListCtrl.SetItem(j, 1, _(u"人工检测"))
                             else:
-                                ListCtrl.SetItem(j, 1, "自动检测")
+                                ListCtrl.SetItem(j, 1, _(u"自动检测"))
                 else:
                     self.button_start_list[i].Enable(False)
 
@@ -412,7 +412,7 @@ class FactoryFrame(wx.Frame):
         length = len(self.testFunctions)
         for i, testFunction in enumerate(self.testFunctions):
             try:
-                self.ListCtrl_list[ID].SetItem(i, 2, "测试中")
+                self.ListCtrl_list[ID].SetItem(i, 2, _(u"测试中"))
                 self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Yellow")
 
                 message = self.testMessages[i]
@@ -440,17 +440,17 @@ class FactoryFrame(wx.Frame):
                 boolean = ["False"]
 
             if testFunction[1] == 1:
-                dlg  = wx.MessageBox("      当前测试项为:  " + message + "\r\n\r\n      请确认该测试项 【是否通过】", self.port_ctrl_list[ID].GetValue(), wx.YES_NO)
+                dlg  = wx.MessageBox(_(u"      当前测试项为:  ") + message + _(u"\r\n\r\n      请确认该测试项 【是否通过】"), self.port_ctrl_list[ID].GetValue(), wx.YES_NO)
                 if dlg == wx.YES:
                     boolean = ["True"]
                 else:
                     boolean = ["False"]
 
             if boolean == ["False"]:
-                self.ListCtrl_list[ID].SetItem(i, 2, "不通过")
+                self.ListCtrl_list[ID].SetItem(i, 2, _(u"不通过"))
                 self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Red")
             else:
-                self.ListCtrl_list[ID].SetItem(i, 2, "通过")
+                self.ListCtrl_list[ID].SetItem(i, 2, _(u"通过"))
                 self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Green")
 
             ret_result += boolean
@@ -458,18 +458,18 @@ class FactoryFrame(wx.Frame):
         test_results = []
         for i in ret_result:
             if i == "True":
-                test_results.append("通过")
+                test_results.append(_(u"通过"))
             elif i == "False":
-                test_results.append("不通过")
+                test_results.append(_(u"不通过"))
             else:
                 test_results.append(i)
 
         test_method = []
         for i in self.testFunctions:
             if i[1] == 1:
-                test_method.append("人工测试")
+                test_method.append(_(u"人工检测"))
             else:
-                test_method.append("自动测试")
+                test_method.append(_(u"自动检测"))
 
         # TODO excel写入不要列表形式
         if "False" not in ret_result:
@@ -555,6 +555,7 @@ class FactoryFrame(wx.Frame):
 class MyApp(wx.App):
     languageTab = locale.getdefaultlocale()[0]
     print("languageTab: ", languageTab)
+    languageTab = "en"
     # 根据系统语言自动设置语言
     if languageTab == "zh_CN":
         t = gettext.translation('Chinese', PROJECT_ABSOLUTE_PATH + "\\locale", languages=["zh_CN"])
