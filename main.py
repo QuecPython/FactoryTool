@@ -555,7 +555,7 @@ class FactoryFrame(wx.Frame):
 class MyApp(wx.App):
     languageTab = locale.getdefaultlocale()[0]
     print("languageTab: ", languageTab)
-    languageTab = "en"
+    # languageTab = "en"
     # 根据系统语言自动设置语言
     if languageTab == "zh_CN":
         t = gettext.translation('Chinese', PROJECT_ABSOLUTE_PATH + "\\locale", languages=["zh_CN"])
