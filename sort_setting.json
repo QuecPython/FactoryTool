@@ -1,7 +1,4 @@
 {
-    "info": [["内存检测", "det_file_space", 0],
-             ["信号检测", "det_signal", 0],
-             ["内存检测1", "det_file_space1", 0],
-             ["内存检测2", "det_file_space2", 0],
-             ["内存检测3", "det_file_space3", 0]]
+    "info": [["Memory test", "det_file_space", 1],
+             ["Signal test", "det_signal", 0]]
 }

@@ -114,7 +114,7 @@ msgid "      当前测试项为:  "
 msgstr "      The current test item is:  "
 
 msgid "\r\n\r\n      请确认该测试项 【是否通过】"
-msgstr "\r\n\r\n      Please confirm the test item 【Passed or Not】"
+msgstr "\r\n\r\n      Please confirm the test result [Passed or Not]"
 
 msgid "是否恢复上次文件"
 msgstr "Do you want to restore the last file"

@@ -9,17 +9,15 @@ QuecPython产测工具是专用于QuecPython项目对模块功能测试的工具
 所有使用QuecPython开发的模块均可使用
 
 ## 功能介绍
-1. 支持QuecPython项目功能测试
-2. 支持4台设备同步测试
-3. 支持自动测试
-3. 支持人工断点测试
+1. 支持4台设备同步测试
+2. 支持自动测试和人工断点测试
+3. 可自定义测试脚本，测试方式（自动测试和人工测试）
 
+## 工具获取
 
-## 如何拉取仓库
+[FactoryTool-Tags](https://github.com/QuecPython/FactoryTool/tags)
 
-```shell
-git clone --recurse-submodules https://github.com/QuecPython/FactoryTool.git -b interventionable
-```
+github上进入FactoryTool项目最新的tag，可以下载可执行包( FactoryTool.zip ) 和 源代码( Source code(zip/tar.gz) )
 
 ## 页面介绍
 
@@ -142,6 +140,14 @@ class TestBase(object):
 
 该文件会保存在工具同级目录下，测试过程中自动追加
 
+
+## 如何拉取仓库
+
+若有二次开发需求，可直接拉取代码仓库
+
+```shell
+git clone --recurse-submodules https://github.com/QuecPython/FactoryTool.git -b interventionable
+```
 
 ## 环境配置
 
