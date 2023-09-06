@@ -74,6 +74,10 @@ class FactoryFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         kwargs["style"] = kwargs.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwargs)
+        self.SetTitle("FactoryTool")
+        _icon = wx.NullIcon
+        _icon.CopyFromBitmap(wx.Bitmap(PROJECT_ABSOLUTE_PATH + "\\media\\quectel.ico", wx.BITMAP_TYPE_ICO))
+        self.SetIcon(_icon)
         self.SetSize((1120, 650))
         self.Center()
         # stdout log

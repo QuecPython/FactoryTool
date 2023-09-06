@@ -44,11 +44,12 @@ class SerialDetection(threading.Thread):
             else:
                 if serial_list == [] or serial_list != self.serPort.comports():
                     serial_list = self.serPort.comports()
-                    # serial_port = self.get_com_number("0x2C7C:0x6005", "x.8")
-                    # serial_port.extend(self.get_com_number("0x2C7C:0x6005", "x.5"))
-                    serial_port = self.get_com_number("0x2C7C:0x0901", "x.8")
-                    serial_port.extend(self.get_com_number("0x2C7C:0x6002", "x.5"))
-                    serial_port.extend(self.get_com_number("0x2C7C:0x6005", "x.5"))
+                    serial_port = self.get_com_number("0x2C7C:0x0901", "x.8") # Unisoc
+                    serial_port.extend(self.get_com_number("0x2C7C:0x6001", "x.5")) # N 系列
+                    serial_port.extend(self.get_com_number("0x2C7C:0x6002", "x.5")) # M 系列
+                    serial_port.extend(self.get_com_number("0x2C7C:0x6005", "x.5")) # A 系列
+                    serial_port.extend(self.get_com_number("0x2C7C:0x0700", "x.1")) # BG95
+                    serial_port.extend(self.get_com_number("0x2C7C:0x0903", "x.5")) # Eigen
                     # print("设备列表为{}".format(serial_port))
                     pub.sendMessage('serialUpdate', arg1=serial_port)
             time.sleep(1)
