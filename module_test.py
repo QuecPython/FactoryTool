@@ -7,7 +7,7 @@ import utime
 class TestBase(object):
     # ------该区域为测试代码------
     @staticmethod
-    def det_signal():
+    def det_signal(args):
         utime.sleep(2)
         if sim.getStatus() == 1:
             if net.getConfig()[0] == 5:

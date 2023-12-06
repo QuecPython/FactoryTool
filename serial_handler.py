@@ -9,6 +9,7 @@
 import serial
 import time
 import asyncio
+import wx
 
 
 class SerialPort(object):
@@ -25,6 +26,7 @@ class SerialPort(object):
         return self._conn
 
     def _close_conn(self):
+        print("================== close ===================")
         self._conn.close()
         self._conn = None
 
@@ -58,6 +60,16 @@ class SerialHandler(SerialPort):
         self.init()
 
     def write_module(self, source, py_cmd, filename="test.py"):
+        time.sleep(2)
+        self._conn.write(b"\x03")
+        self._conn.write(b"\x03")
+        self._conn.write(b"\x01")
+        self._conn.write(b"\x04")
+        self._conn.write(b"\x02")
+        # await asyncio.sleep(.1)
+        time.sleep(2)
+        self._conn.flushInput()
+
         self._test_conn()
 
         self._conn.write(b"\x01")
@@ -74,7 +86,10 @@ class SerialHandler(SerialPort):
         self._send_cmd("f.close()")
         self._conn.write(b"\x04")
         self._conn.write(b"\x02")
+
+        self._conn.write(b"\x01")
         self._conn.write(b"\x04")
+        self._conn.write(b"\x02")
 
         source.close()
         self.exec_cmd(py_cmd[0])
@@ -99,13 +114,49 @@ class SerialHandler(SerialPort):
             log_text_ctrl.SetValue(result_list)
         return result_list
 
-    def ret_result(self):
+    def getImei(self):
+        self._send_cmd("import modem")
+        # await asyncio.sleep(.1)
+        time.sleep(.1)
+        self._conn.flushInput() # 丢弃接收缓存中的所有数据
+        try:
+            self._send_cmd("modem.getDevImei()")
+            # await asyncio.sleep(.1)
+            imei = self.ret_result().split("\r\n")[1]
+            # print("imei: {}".format(imei))
+        except Exception as e:
+            print("get imei error: {}".format(e))
+            imei = "-1"
+        return imei
+
+    def ret_result(self, tips_ctrl=None, tips_info=None):
         data = ""
         for i in range(60):
+            if tips_info:
+                tips_ctrl.SetValue("")
+
+                font1 = wx.Font(15, wx.MODERN, wx.NORMAL, wx.NORMAL, False, 'Consolas')
+                tips_ctrl.SetFont(font1)
+                tips_ctrl.SetDefaultStyle(wx.TextAttr(wx.RED))
+                tips_ctrl.AppendText(_(u"倒计时: ")+str(60-i))
+
+                font1 = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, 'Consolas')
+                tips_ctrl.SetFont(font1)
+                tips_ctrl.SetDefaultStyle(wx.TextAttr(wx.RED))
+                tips_ctrl.AppendText("\r\n")
+                tips_ctrl.AppendText(tips_info)
             data += self._conn.read(self._conn.inWaiting()).decode("utf-8", errors="ignore")
             if data.endswith(">>> "):
                 break
+            time.sleep(1)
+
+        if tips_info:
+            tips_ctrl.SetValue("")
+
+        if not data.endswith(">>> "):
+            self._conn.write(b"\x03")
             time.sleep(0.5)
+            data += self._conn.read(self._conn.inWaiting()).decode("utf-8", errors="ignore")
         return data
 
     def exit_test(self):

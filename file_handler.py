@@ -8,6 +8,7 @@
 """
 import serial_handler
 import openpyxl
+from openpyxl.styles import PatternFill, Color
 import codecs
 import json
 import sys
@@ -29,7 +30,6 @@ class ExcelHandler(object):
             wb.save(self.file)
         self.wb = openpyxl.load_workbook(self.file)
         self.ws = self.wb[self.wb.sheetnames[0]]
-
 
     def get_rows_columns(self):
         rows = self.ws.max_row
@@ -53,9 +53,17 @@ class ExcelHandler(object):
             rows_data.append(self.ws.cell(row=row, column=i).value)
             return rows_data
 
-    def set_cell_value(self, row, column, cell_value):
+    def set_cell_value(self, row, column, cell_value, fill=None):
         try:
             self.ws.cell(row=row, column=column).value = cell_value
+            if fill == "Green":
+                fill = PatternFill('solid', fgColor=Color("00FF00"))
+                self.ws.cell(row=row, column=column).fill = fill
+            elif fill == "Red":
+                fill = PatternFill('solid', fgColor=Color("FF0000"))
+                self.ws.cell(row=row, column=column).fill = fill
+            else:
+                pass
         except KeyError as e:
             self.ws.cell(row=row, column=column).value = "Write Fail"
             print(e)

@@ -122,3 +122,47 @@ msgstr "Do you want to restore the last file"
 msgid "文件不存在"
 msgstr "File does not exist"
 
+msgid "Imei号匹配"
+msgstr "Imei matching"
+
+msgid "自动重启"
+msgstr "Automatic restart"
+
+msgid "版本号检测"
+msgstr "Version detection"
+
+msgid "版本号: "
+msgstr "Version: "
+
+msgid "自动开始测试"
+msgstr "Start testing automatically"
+
+msgid "添加"
+msgstr "Add"
+
+msgid "删除"
+msgstr "Delete"
+
+msgid "清空"
+msgstr "Clear"
+
+msgid "全选"
+msgstr "Select all"
+
+msgid "确认"
+msgstr "Confirm"
+
+msgid "取消"
+msgstr "Cancel"
+
+msgid " 测项配置 "
+msgstr " Test item configuration"
+
+msgid "设置"
+msgstr "Setting"
+
+msgid "高级设置"
+msgstr "Advanced Settings"
+
+msgid "倒计时: "
+msgstr "Countdown: "
