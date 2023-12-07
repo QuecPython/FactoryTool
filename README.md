@@ -124,13 +124,18 @@ class TestBase(object):
 
 ```json
 {
-    //        测项名称      测项的function  延时时间  测试方式:0自动检测1人工检测
+     //        测项名称      测项的function  延时时间  测试方式:0/1/2
     "info": [["Memory test", "det_file_space()", 0, 0],
              ["Signal test", "det_signal('test')", 0, 0]],
+    // 测试方式 0: 全自动测试
+    // 测试方式 1: 需手动确认开始 和 手动确认结果测试项 - 确认开始的弹窗提示tips内容
+    // 测试方式 2: 需手动确认开始 和 自动确认结果测试项 - 确认开始的弹窗提示tips内容
+
     //       测项名称        该测项对应的提示信息
     "tips": {"Memory test": "Please press button 1"}
 }
 ```
+
 若有配置tips，则在测试该项时，界面测项显示下面的文本框会显示该提示信息
 
 ## 测试原理

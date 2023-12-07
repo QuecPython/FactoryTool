@@ -326,7 +326,6 @@ class FactoryFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=2002)
         self.menuBar.Append(wxg_tmp_menu_1, _(u"日志"))
 
-
         wxg_tmp_menu_2 = wx.Menu()
         wxg_tmp_menu_2.Append(3001, _(u"高级设置"), "")
         self.Bind(wx.EVT_MENU, self.__menu_handler, id=3001)
@@ -534,15 +533,9 @@ class FactoryFrame(wx.Frame):
                 data = json.load(f)
                 print(data)
                 info = data["info"]
-                if selectedList:
-                    info = [i for i in info if i[0] in selectedList]
-                self.testFunctions = [i[1:] for i in info]
-                self.testMessages = [i[0] for i in info]
-                self.tips_info = {}
-                try:
-                    self.tips_info = data["tips"]
-                except Exception as e:
-                    print("523 e: ", e)
+
+                self.testFunctions = []
+                self.testMessages = []
 
                 print("versionDetection: ", versionDetection)
                 if versionDetection == "True":
@@ -552,6 +545,16 @@ class FactoryFrame(wx.Frame):
                 if self.conf.get("detection", "imei") == "True":
                     self.testFunctions.append(["Imei号匹配", 0, 0])
                     self.testMessages.append(_("Imei号匹配"))
+
+                if selectedList:
+                    info = [i for i in info if i[0] in selectedList]
+                self.testFunctions += [i[1:] for i in info]
+                self.testMessages += [i[0] for i in info]
+                self.tips_info = {}
+                try:
+                    self.tips_info = data["tips"]
+                except Exception as e:
+                    print("523 e: ", e)
 
             try:
                 relative_path = os.path.relpath(json_file, PROJECT_ABSOLUTE_PATH)
@@ -573,8 +576,11 @@ class FactoryFrame(wx.Frame):
                         # testFunction = self.testFunctions[j]
                         ListCtrl.InsertItem(j, j)
                         ListCtrl.SetItem(j, 0, self.testMessages[j])
+
                         if element[-1] == 1:
                             ListCtrl.SetItem(j, 1, _(u"人工检测"))
+                        if element[-1] == 2:
+                            ListCtrl.SetItem(j, 1, _(u"自动检测-2"))
                         else:
                             ListCtrl.SetItem(j, 1, _(u"自动检测"))
             if automated == "True":
@@ -689,6 +695,8 @@ class FactoryFrame(wx.Frame):
                             ListCtrl.SetItem(j, 0, self.testMessages[j])
                             if element[-1] == 1:
                                 ListCtrl.SetItem(j, 1, _(u"人工检测"))
+                            if element[-1] == 2:
+                                ListCtrl.SetItem(j, 1, _(u"自动检测-2"))
                             else:
                                 ListCtrl.SetItem(j, 1, _(u"自动检测"))
                         print("automated: ", automated)
@@ -748,6 +756,11 @@ class FactoryFrame(wx.Frame):
                     self.ListCtrl_list[ID].SetItemBackgroundColour(i, "Yellow")
 
                     message = self.testMessages[i]
+                    if testFunction[-1] in [1, 2]:
+                        tips = self.tips_info.get(message)
+                        if tips:
+                            dlg  = wx.MessageBox(tips, self.port_ctrl_list[ID].GetValue(), wx.YES_DEFAULT | wx.ICON_INFORMATION)
+
                     if message == _("版本号检测"):
                         ser.exec_cmd(testFunction[0].replace("\\r\\n", "\r\n"))
                         test_result = ser.ret_result()
@@ -833,6 +846,7 @@ class FactoryFrame(wx.Frame):
                 self.button_all_start.Enable(True)
             return
 
+        ser.exec_cmd("uos.remove('/usr/test.py')")
         if restartSign == "True":
             ser.exec_cmd("from misc import Power\r\nPower.powerRestart()")
 
