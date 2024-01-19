@@ -576,10 +576,9 @@ class FactoryFrame(wx.Frame):
                         # testFunction = self.testFunctions[j]
                         ListCtrl.InsertItem(j, j)
                         ListCtrl.SetItem(j, 0, self.testMessages[j])
-
                         if element[-1] == 1:
                             ListCtrl.SetItem(j, 1, _(u"人工检测"))
-                        if element[-1] == 2:
+                        elif element[-1] == 2:
                             ListCtrl.SetItem(j, 1, _(u"自动检测-2"))
                         else:
                             ListCtrl.SetItem(j, 1, _(u"自动检测"))

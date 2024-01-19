@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-@Project:Factory_test 
+@Project:Factory_test
 @File:serial_list.py
 @Author:rivern.yuan
-@Date:2022/9/6 15:59 
+@Date:2022/9/6 15:59
 """
 
 import time
@@ -31,7 +31,8 @@ class SerialDetection(threading.Thread):
     def get_com_number(self, vid_pid, location):
         port_list = []
         for p in list(self.serPort.comports()):
-            if p.vid == int(vid_pid.split(":")[0], 16) and p.pid == int(vid_pid.split(":")[1], 16):
+            print("p.location: ", p.location)
+            if p.vid == int(vid_pid.split(":")[0], 16) and p.pid == int(vid_pid.split(":")[1], 16) and p.location is not None:
                 if location in p.location:
                     port_list.append(p.device)
         return port_list
